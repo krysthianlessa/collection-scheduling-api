@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,21 +80,19 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-POSTGRES_DB = config("POSTGRES_DB", default="new_db")
-POSTGRES_USER = config("POSTGRES_USER", default="invalid_user")
-POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default="S0me-p455w0rd")
-POSTGRES_SERVICE = config("POSTGRES_SERVICE", default="database")
-POSTGRES_PORT = config("POSTGRES_PORT", default="5432")
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": POSTGRES_DB,
-        "USER": POSTGRES_USER,
-        "PASSWORD": POSTGRES_PASSWORD,
-        "HOST": POSTGRES_SERVICE,
-        "PORT": POSTGRES_PORT,
-    }
+    "default": dj_database_url.config(
+        default="postgresql://youruser:S0me-p455w0rd@localhost:5432/database",
+        conn_max_age=600,
+    )
+    # {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": POSTGRES_DB,
+    #     "USER": POSTGRES_USER,
+    #     "PASSWORD": POSTGRES_PASSWORD,
+    #     "HOST": POSTGRES_SERVICE,
+    #     "PORT": POSTGRES_PORT,
+    # }
 }
 
 # Password validation

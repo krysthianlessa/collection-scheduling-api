@@ -8,3 +8,4 @@ python-decouple==3.8
 Brotli==1.1.0
 whitenoise==6.6.0
 uvicorn==0.29.0
+dj-database-url==2.1.0
