@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Schedule(models.Model):
@@ -8,6 +9,7 @@ class Schedule(models.Model):
     full_name = models.CharField(max_length=256)
     address =  models.CharField(max_length=256)
     phone = models.CharField(max_length=64)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
 
 class ScheduleWhatsAppIntegration(models.Model):
