@@ -15,8 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework_jwt.views import ObtainJSONWebTokenView
+from core.views import ScheduleViewSet
+from rest_framework.routers import DefaultRouter
+
+
+router_api = DefaultRouter()
+router_api.register(r"schedule", ScheduleViewSet)
 
 urlpatterns = [
+    path("", include(router_api.urls)),
     path('admin/', admin.site.urls),
+    path("auth/token/", csrf_exempt(ObtainJSONWebTokenView.as_view()), name="obtain-token"),
 ]
