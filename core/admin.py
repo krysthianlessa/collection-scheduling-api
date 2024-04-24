@@ -35,6 +35,12 @@ class ScheduleAdmin(admin.ModelAdmin):
     def whatsapp(self, obj) -> bool:
         return obj.whatsapp.sent_at is not None
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 admin.site.unregister(Group)
 
 admin.site.register(Schedule, ScheduleAdmin)
