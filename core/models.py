@@ -13,10 +13,23 @@ class Schedule(models.Model):
 
 
 class ScheduleWhatsAppIntegration(models.Model):
-    schedule = models.OneToOneField("core.Schedule", on_delete=models.CASCADE)
+    schedule = models.OneToOneField(
+        "core.Schedule",
+        related_name="whatsapp",
+        on_delete=models.CASCADE,
+    )
     sent_at = models.DateTimeField(auto_now_add=True)
 
 
 class ScheduleCalendarIntegration(models.Model):
-    schedule = models.OneToOneField("core.Schedule", on_delete=models.CASCADE)
+    schedule = models.OneToOneField(
+        "core.Schedule",
+        related_name="calendar",
+        on_delete=models.CASCADE,
+    )
     sync_at = models.DateTimeField(auto_now_add=True)
+
+
+class SharedCalendar(models.Model):
+    identify = models.CharField(max_length=128)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
