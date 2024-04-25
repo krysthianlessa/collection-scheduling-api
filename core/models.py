@@ -48,4 +48,4 @@ class SharedCalendar(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"{self.user.username} | {self.sector} | {self.neighborhood}"
+        return f"{self.user.username} | {self.neighborhood} | {self.sector}"
