@@ -10,6 +10,12 @@ class Schedule(models.Model):
     address =  models.CharField(max_length=256)
     phone = models.CharField(max_length=64)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    shared_calendar = models.ForeignKey(
+        "core.SharedCalendar",
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="schedules",
+    )
 
 
 class ScheduleWhatsAppIntegration(models.Model):
@@ -33,3 +39,5 @@ class ScheduleCalendarIntegration(models.Model):
 class SharedCalendar(models.Model):
     identify = models.CharField(max_length=128)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+    sector = models.CharField(max_length=128)
