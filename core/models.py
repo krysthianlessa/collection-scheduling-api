@@ -41,6 +41,7 @@ class SharedCalendar(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     sector = models.CharField(max_length=128)
+    neighborhood = models.CharField(max_length=128)
 
     def __str__(self) -> str:
-        return f"{self.user.username} | {self.sector}"
+        return f"{self.user.username} | {self.sector} | {self.neighborhood}"
