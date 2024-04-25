@@ -38,10 +38,14 @@ class ScheduleCalendarIntegration(models.Model):
 
 class SharedCalendar(models.Model):
     identify = models.CharField(max_length=128)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     sector = models.CharField(max_length=128)
     neighborhood = models.CharField(max_length=128)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="shared_calendar",
+    )
 
     def __str__(self) -> str:
         return f"{self.user.username} | {self.sector} | {self.neighborhood}"
