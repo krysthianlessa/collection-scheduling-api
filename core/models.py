@@ -7,6 +7,7 @@ class Schedule(models.Model):
     start = models.DateTimeField(blank=True, null=True)
     end = models.DateTimeField(blank=True, null=True)
     full_name = models.CharField(max_length=256)
+    day_of_birth = models.DateTimeField(blank=True, null=True)
     address =  models.CharField(max_length=256)
     phone = models.CharField(max_length=64)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -16,6 +17,18 @@ class Schedule(models.Model):
         null=True,
         related_name="schedules",
     )
+
+    @property
+    def whatsapp_message(self):
+        return (
+            f"*Agendamento de Coleta*\n\n"
+            f"Dia: {self.day}\n"
+            f"Faixa de Horário: {self.start} - {self.end}\n\n"
+            f"Nome completo: {self.full_name}\n"
+            f"Data de nascimento: {self.day_of_birth}\n"
+            f"Endereço: {self.address}\n"
+            f"Telefone: {self.phone}\n"
+        )
 
 
 class ScheduleWhatsAppIntegration(models.Model):

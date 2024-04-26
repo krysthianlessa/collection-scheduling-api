@@ -10,6 +10,7 @@ class ScheduleSerializer(ModelSerializer):
             "start",
             "end",
             "full_name",
+            "day_of_birth",
             "address",
             "phone",
         )

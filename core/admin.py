@@ -15,6 +15,7 @@ class ScheduleAdmin(admin.ModelAdmin):
         "start",
         "end",
         "full_name",
+        "day_of_birth",
         "address",
         "phone",
         "created_by",
