@@ -1,0 +1,25 @@
+services:
+  labzap:
+    image: devlikeapro/whatsapp-http-api
+    container_name: whatsapp-http-api
+    ports:
+      - "3000:3000/tcp"
+    environment:
+      # Environment variables from https://waha.devlike.pro/docs/how-to/config/
+      - WHATSAPP_HOOK_URL=https://httpbin.org/post # Verificar URL do projeto em PRD
+      - WHATSAPP_HOOK_EVENTS=message
+      - WHATSAPP_DEFAULT_ENGINE=WEBJS
+    restart: always
+
+  polling:
+    build: .
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./scripts/:/usr/src/
+    ports:
+      - 8001:8001
+    env_file:
+      - .env
+    depends_on:
+      - labzap
