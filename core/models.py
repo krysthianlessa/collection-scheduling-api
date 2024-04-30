@@ -3,7 +3,10 @@ from django.contrib.auth.models import User
 
 
 class Schedule(models.Model):
-    day = models.DateTimeField(blank=True, null=True)
+    has_sync = models.BooleanField(default=False)
+    day_of_birth = models.DateField(blank=True, null=True)
+    calendar_event_id = models.CharField(max_length=64, null=True)
+    day = models.DateField(blank=True, null=True)
     start = models.DateTimeField(blank=True, null=True)
     end = models.DateTimeField(blank=True, null=True)
     full_name = models.CharField(max_length=256)
@@ -15,6 +18,15 @@ class Schedule(models.Model):
         on_delete=models.CASCADE,
         null=True,
         related_name="schedules",
+    )
+
+
+class ScheduleHistory(models.Model):
+    sync_at = models.DateTimeField()
+    schedule = models.ForeignKey(
+        "core.Schedule",
+        on_delete=models.CASCADE,
+        related_name="history",
     )
 
 

@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgresql://youruser:S0me-p455w0rd@localhost:5432/database",
+        default="postgresql://youruser:S0mep455w0rd@database:5432/yourdb",
         conn_max_age=600,
     )
     # {
@@ -124,7 +124,7 @@ REST_FRAMEWORK = {
 # JWT
 JWT_AUTH = {
     "JWT_AUTH_HEADER_PREFIX": "Bearer",
-    # "JWT_RESPONSE_PAYLOAD_HANDLER": "core.utils.jwt_create_response_payload",
+    "JWT_RESPONSE_PAYLOAD_HANDLER": "core.utils.jwt_create_response_payload",
     "JWT_EXPIRATION_DELTA": timedelta(days=120),
 }
 
@@ -162,3 +162,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DJANGO_SUPERUSER_USERNAME = config("DJANGO_SUPERUSER_USERNAME")
 DJANGO_SUPERUSER_PASSWORD = config("DJANGO_SUPERUSER_PASSWORD")
+
+RECIPIENT_PHONE_NUMBER = config("RECIPIENT_PHONE_NUMBER") # like this 557381753509
+LAB_ZAP_URL = config("LAB_ZAP_URL")
