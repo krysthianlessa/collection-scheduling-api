@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
+    "rest_framework_api_key",
     "core",
 ]
 
@@ -162,6 +163,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DJANGO_SUPERUSER_USERNAME = config("DJANGO_SUPERUSER_USERNAME")
 DJANGO_SUPERUSER_PASSWORD = config("DJANGO_SUPERUSER_PASSWORD")
-
-RECIPIENT_PHONE_NUMBER = config("RECIPIENT_PHONE_NUMBER") # like this 557381753509
-LAB_ZAP_URL = config("LAB_ZAP_URL")
