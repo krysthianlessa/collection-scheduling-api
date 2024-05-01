@@ -20,6 +20,18 @@ class Schedule(models.Model):
         related_name="schedules",
     )
 
+    @property
+    def whatsapp_message(self):
+        return (
+            f"*Agendamento de Coleta*\n\n"
+            f"Dia: {self.day}\n"
+            f"Faixa de Horário: {self.start} - {self.end}\n\n"
+            f"Nome completo: {self.full_name}\n"
+            # f"Data de nascimento: {self.day_of_birth}\n"
+            f"Endereço: {self.address}\n"
+            f"Telefone: {self.phone}\n"
+        )
+
 
 class ScheduleHistory(models.Model):
     sync_at = models.DateTimeField()
