@@ -5,14 +5,12 @@ from core.models import Schedule, SharedCalendar
 class ScheduleSerializer(ModelSerializer):
     class Meta:
         model = Schedule
-        fields = (
-            "day",
-            "start",
-            "end",
-            "full_name",
-            "address",
-            "phone",
-        )
+        exclude = [
+            'created_by',
+            'shared_calendar',
+            'calendar_event_id',
+            'has_sync'
+        ]
 
     def create(self, validated_data):
         # Get the user making the request
