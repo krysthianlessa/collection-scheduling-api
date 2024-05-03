@@ -1,8 +1,10 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from core.models import Schedule, SharedCalendar
 
 
 class ScheduleSerializer(ModelSerializer):
+    whatsapp_message = SerializerMethodField(read_only=True)
+
     class Meta:
         model = Schedule
         exclude = [
@@ -11,6 +13,10 @@ class ScheduleSerializer(ModelSerializer):
             'calendar_event_id',
             'has_sync'
         ]
+        read_only_fields = ["whatsapp_message"]
+
+    def get_whatsapp_message(self, schedule: Schedule):
+        return schedule.whatsapp_message
 
     def create(self, validated_data):
         # Get the user making the request
