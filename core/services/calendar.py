@@ -46,3 +46,4 @@ class CalendarService():
             schedule=schedule,
             data=event_data,
         )
+        Schedule.objects.filter(id=schedule.id).update(calendar_event_id=event_data["id"])
