@@ -1,12 +1,13 @@
 import os
 from time import sleep
 import requests
+from decouple import config
 
 WAIT_TIME = 60
-BACKEND_URL = ""
+BACKEND_URL = "http://web:8000/"
 LAB_ZAP_URL = "http://labzap:3000/"
-RECIPIENT_PHONE_NUMBER = os.environ.get("RECIPIENT_PHONE_NUMBER", default="123")
-BACKEND_API_KEY = os.environ.get("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGPFjptO1nf2SA6ci")
+RECIPIENT_PHONE_NUMBER = config("RECIPIENT_PHONE_NUMBER", default="123")
+BACKEND_API_KEY = config("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGPFjptO1nf2SA6ci")
 
 
 class WhatsAppIntegration:
@@ -16,7 +17,7 @@ class WhatsAppIntegration:
         }
 
         response = requests.get(
-            f"{BACKEND_URL}/schedule/?has_sync=0",
+            f"{BACKEND_URL}schedule/?has_sync=0",
             headers=headers,
         )
         response_data = response.json()
@@ -42,7 +43,7 @@ class WhatsAppIntegration:
         }
 
         response = requests.patch(
-            f"{BACKEND_URL}/schedule/{schedule_id}/",
+            f"{BACKEND_URL}schedule/{schedule_id}/",
             {"has_sync": True},
             headers=headers,
         )
