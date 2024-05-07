@@ -13,6 +13,7 @@ services:
 
   polling:
     build: .
+    command: python polling.py
     stdin_open: true
     tty: true
     volumes:
