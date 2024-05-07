@@ -19,6 +19,7 @@ class WhatsAppIntegration:
             f"{BACKEND_URL}schedule/?has_sync=0",
             headers=headers,
         )
+
         if response.status_code == 200:
             response_data = response.json()
             return response_data["results"] if response_data["count"] > 0 else []
