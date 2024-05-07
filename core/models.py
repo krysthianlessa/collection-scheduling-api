@@ -72,6 +72,10 @@ class ScheduleCalendarIntegration(models.Model):
         on_delete=models.CASCADE,
     )
     sync_at = models.DateTimeField(auto_now_add=True)
+    data = models.JSONField(
+        "Calendar Event Data",
+        default=dict,
+    )
 
 
 class SharedCalendar(models.Model):
