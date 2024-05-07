@@ -7,7 +7,7 @@ class CalendarService():
 
     @classmethod
     def create_api_service(cls):
-        service_account_file = "service_account_file.json"
+        service_account_file = "service_account_key.json"
         credentials = service_account.Credentials.from_service_account_file(
             service_account_file,
             scopes=['https://www.googleapis.com/auth/calendar']
@@ -15,32 +15,32 @@ class CalendarService():
         return build('calendar', 'v3', credentials=credentials)
 
     @classmethod
-    def sync_to_google_api(cls, schedule: Schedule, create = True):
+    def sync_to_google_api(cls, schedule: Schedule):
         api_service = cls.create_api_service()
-        calendar_id = schedule.shared_calendar.filter().first
+        calendar_id = schedule.shared_calendar.identify
         event = {
             'summary': schedule.full_name,
             'description': schedule.event_description,
             'start': {
-                'dateTime': schedule.start,
+                'dateTime': schedule.start.strftime("%Y-%m-%dT%H:%M:%S"),
                 'timeZone': 'America/Sao_Paulo',
             },
             'end': {
-                'dateTime': schedule.end,
+                'dateTime': schedule.end.strftime("%Y-%m-%dT%H:%M:%S"),
                 'timeZone': 'America/Sao_Paulo',
             },
         }
 
         service_event = api_service.events()
         params = {
-            "calendar_id": calendar_id,
+            "calendarId": calendar_id,
             "body": event,
         }
 
-        if create:
-            event_data = service_event.insert(**params)
+        if schedule.calendar_event_id == None:
+            event_data = service_event.insert(**params).execute()
         else:
-            event_data = service_event.update(**params, event_id=schedule.calendar_event_id)
+            event_data = service_event.update(**params, event_id=schedule.calendar_event_id).execute()
 
         ScheduleCalendarIntegration.objects.create(
             schedule=schedule,
