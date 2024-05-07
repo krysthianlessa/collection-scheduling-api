@@ -56,7 +56,7 @@ class ScheduleWhatsAppIntegration(models.Model):
     sent_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"{self.id} - [schedule: {self.schedule.id}]: {self.sent_at.strftime("%Y-%m-%d %H:%M:%S")}"
+        return f"{self.id} - [schedule: {self.schedule.id}]: {self.sent_at.strftime('%Y-%m-%d %H:%M:%S')}"
 
 class ScheduleCalendarIntegration(models.Model):
     schedule = models.ForeignKey(
@@ -71,7 +71,7 @@ class ScheduleCalendarIntegration(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"{self.id} - [schedule: {self.schedule.id}]: {self.sync_at.strftime("%Y-%m-%d %H:%M:%S")}"
+        return f"{self.id} - [schedule: {self.schedule.id}]: {self.sync_at.strftime('%Y-%m-%d %H:%M:%S')}"
 
 
 class SharedCalendar(models.Model):

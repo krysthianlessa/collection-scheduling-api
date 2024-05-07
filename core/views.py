@@ -16,7 +16,7 @@ class ScheduleViewSet(ModelViewSet):
     filterset_fields = ["has_sync"]
     permission_classes = [HasAPIKey | IsSuperUser]
 
-    @action(detail=False, methods=["post"], url_path="(?P<schedule_id>\d+)/whatsapp")
+    @action(detail=False, methods=["post"], url_path="(?P<schedule_id>\\d+)/whatsapp")
     def whatsapp_synced(self, request, schedule_id, *args, **kwargs):
         Schedule.objects.filter(id=schedule_id).update(has_sync=True)
 
