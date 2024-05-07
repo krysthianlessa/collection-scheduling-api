@@ -1,4 +1,3 @@
-import os
 from time import sleep
 import requests
 from decouple import config
@@ -20,8 +19,12 @@ class WhatsAppIntegration:
             f"{BACKEND_URL}schedule/?has_sync=0",
             headers=headers,
         )
-        response_data = response.json()
-        return response_data
+        if response.status_code == 200:
+            response_data = response.json()
+            return response_data["results"] if response_data["count"] > 0 else []
+
+        # TODO: Add logs to catch when status code is not 200 OK
+        return []
 
     def send_to_whatsapp(self, message):
         headers = {"Content-Type": "application/json"}
