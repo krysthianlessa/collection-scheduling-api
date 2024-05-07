@@ -33,3 +33,9 @@ class ScheduleViewSet(ModelViewSet):
         )
         process.start()
         return
+
+    @action(detail=False, methods=["post"], url_path="(?P<schedule_id>\d+)/whatsapp")
+    def whatsapp_synced(self, request, schedule_id, *args, **kwargs):
+        Schedule.objects.filter(id=schedule_id).update(has_sync=True)
+
+        return Response(status=status.HTTP_200_OK)
