@@ -1,10 +1,11 @@
 from time import sleep
 import requests
+from requests.exceptions import ConnectionError
 from decouple import config
 
 WAIT_TIME = 60
-BACKEND_URL = "http://web:8000/"
-LAB_ZAP_URL = "http://labzap:3000/"
+BACKEND_URL = config("BACKEND_URL", "http://web:8000/")
+LAB_ZAP_URL = config("LAB_ZAP_URL", default="http://labzap:3000/")
 RECIPIENT_PHONE_NUMBER = config("RECIPIENT_PHONE_NUMBER", default="123")
 BACKEND_API_KEY = config("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGPFjptO1nf2SA6ci")
 
@@ -35,10 +36,11 @@ class WhatsAppIntegration:
             "session": "default"
         }
         response = requests.post(
-            f"{LAB_ZAP_URL}/api/sendText",
+            f"{LAB_ZAP_URL}api/sendText",
             json=payload,
             headers=headers,
         )
+        print("send_to_whatsapp:", response)
         return response
 
     def update_schedule(self, schedule_id):
@@ -46,29 +48,31 @@ class WhatsAppIntegration:
             "Authorization": f"Api-Key {BACKEND_API_KEY}"
         }
 
-        response = requests.patch(
-            f"{BACKEND_URL}schedule/{schedule_id}/",
-            {"has_sync": True},
+        response = requests.post(
+            f"{BACKEND_URL}schedule/{schedule_id}/whatsapp/",
             headers=headers,
         )
-        response_data = response.json()
-        return response_data
+        print("update_schedule:", response)
 
 
 def main():
     wpp = WhatsAppIntegration()
-    try:
-        while True:
-            schedules = wpp.get_schedules()
+    while True:
+        schedules = wpp.get_schedules()
 
-            for schedule in schedules:
+        for schedule in schedules:
+            try:
+                # E se o primeiro der OK e o segundo falhar? Vou persistir localmente tbm.
                 wpp.send_to_whatsapp(schedule["whatsapp_message"])
                 wpp.update_schedule(schedule["id"])
+                sleep(0.3)
+            except ConnectionError as connection_error:
+                print("Connection Error:", connection_error)
 
-            sleep(WAIT_TIME)
-    except KeyboardInterrupt:
-        print("Interrupted!")
-
+        sleep(WAIT_TIME)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Interrupted!")

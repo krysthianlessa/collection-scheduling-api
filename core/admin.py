@@ -36,10 +36,12 @@ class ScheduleAdmin(admin.ModelAdmin):
     )
 
     def calendar(self, obj) -> bool:
-        return obj.calendar.sync_at is not None
+        calendar = obj.calendar_integration.order_by("id").last()
+        return calendar and calendar.sync_at is not None
 
     def whatsapp(self, obj) -> bool:
-        return obj.whatsapp.sent_at is not None
+        whatsapp = obj.whatsapp_integration.order_by("id").last()
+        return whatsapp and whatsapp.sent_at is not None
 
     def has_add_permission(self, request, obj=None):
         return False
