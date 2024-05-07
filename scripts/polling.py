@@ -41,7 +41,7 @@ class WhatsAppIntegration:
             headers=headers,
         )
         print("send_to_whatsapp:", response)
-        return response
+        return response.status_code == 200
 
     def update_schedule(self, schedule_id):
         headers = {
@@ -58,18 +58,21 @@ class WhatsAppIntegration:
 def main():
     wpp = WhatsAppIntegration()
     while True:
-        schedules = wpp.get_schedules()
+        sleep(WAIT_TIME)
 
-        for schedule in schedules:
+        for schedule in wpp.get_schedules():
             try:
                 # E se o primeiro der OK e o segundo falhar? Vou persistir localmente tbm.
-                wpp.send_to_whatsapp(schedule["whatsapp_message"])
-                wpp.update_schedule(schedule["id"])
+                # Antes de enviar para o WHatsapp, verificar no endpoint "api/sessions/default" se a sessão
+                # está ativa
+                if wpp.send_to_whatsapp(schedule["whatsapp_message"]):
+                    wpp.update_schedule(schedule["id"])
+
                 sleep(0.3)
             except ConnectionError as connection_error:
                 print("Connection Error:", connection_error)
+        break
 
-        sleep(WAIT_TIME)
 
 if __name__ == '__main__':
     try:
