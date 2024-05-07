@@ -31,7 +31,7 @@ class Schedule(models.Model):
             f"Endereço: {self.address}\n"
             f"Telefone: {self.phone}\n"
         )
-    
+
     @property
     def event_description(self):
         return (
@@ -42,6 +42,9 @@ class Schedule(models.Model):
             f"Endereço: {self.address}\n"
             f"Telefone: {self.phone}\n"
         )
+
+    def __str__(self) -> str:
+        return f"{self.full_name}: {self.day}"
 
 
 class ScheduleHistory(models.Model):
