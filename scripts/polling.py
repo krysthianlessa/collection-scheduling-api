@@ -8,6 +8,7 @@ LAB_ZAP_URL = "http://labzap:3000/"
 RECIPIENT_PHONE_NUMBER = os.environ.get("RECIPIENT_PHONE_NUMBER", default="123")
 BACKEND_API_KEY = os.environ.get("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGPFjptO1nf2SA6ci")
 
+
 class WhatsAppIntegration:
     def get_schedules(self):
         headers = {
