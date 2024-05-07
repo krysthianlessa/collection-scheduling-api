@@ -27,7 +27,18 @@ class Schedule(models.Model):
             f"Dia: {self.day}\n"
             f"Faixa de Horário: {self.start} - {self.end}\n\n"
             f"Nome completo: {self.full_name}\n"
-            # f"Data de nascimento: {self.day_of_birth}\n"
+            f"Data de nascimento: {self.day_of_birth}\n"
+            f"Endereço: {self.address}\n"
+            f"Telefone: {self.phone}\n"
+        )
+    
+    @property
+    def event_description(self):
+        return (
+            f"Dia: {self.day}\n"
+            f"Faixa de Horário: {self.start} - {self.end}\n\n"
+            f"Nome completo: {self.full_name}\n"
+            f"Data de nascimento: {self.day_of_birth}\n"
             f"Endereço: {self.address}\n"
             f"Telefone: {self.phone}\n"
         )

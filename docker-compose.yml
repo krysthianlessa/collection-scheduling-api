@@ -1,13 +1,13 @@
 services:
-  labzap:
-    extends:
-      file: docker-compose-onprimise.yml
-      service: labzap
+  # labzap:
+  #   extends:
+  #     file: docker-compose-onprimise.yml
+  #     service: labzap
 
-  polling:
-    extends:
-      file: docker-compose-onprimise.yml
-      service: polling
+  # polling:
+  #   extends:
+  #     file: docker-compose-onprimise.yml
+  #     service: polling
 
   database:
     image: postgres:16.0-alpine
@@ -29,4 +29,4 @@ services:
       - .env
     depends_on:
       - database
-      - labzap
+      # - labzap
