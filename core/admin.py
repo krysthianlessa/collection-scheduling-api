@@ -1,10 +1,16 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group, User
-from core.models import Schedule, SharedCalendar
+from django.contrib.auth.models import Group
+from core.models import Schedule, SharedCalendar, ScheduleWhatsAppIntegration, ScheduleCalendarIntegration
 
 
 class SharedCalendarAdmin(admin.ModelAdmin):
     model = SharedCalendar
+
+class ScheduleWhatsAppIntegrationAdmin(admin.ModelAdmin):
+    model = ScheduleWhatsAppIntegration
+
+class ScheduleCalendarIntegrationAdmin(admin.ModelAdmin):
+    model = ScheduleCalendarIntegration
 
 
 class ScheduleAdmin(admin.ModelAdmin):
@@ -41,4 +47,6 @@ class ScheduleAdmin(admin.ModelAdmin):
 admin.site.unregister(Group)
 
 admin.site.register(Schedule, ScheduleAdmin)
+admin.site.register(ScheduleWhatsAppIntegration, ScheduleWhatsAppIntegrationAdmin)
+admin.site.register(ScheduleCalendarIntegration, ScheduleCalendarIntegrationAdmin)
 admin.site.register(SharedCalendar, SharedCalendarAdmin)

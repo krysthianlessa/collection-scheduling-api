@@ -47,28 +47,21 @@ class Schedule(models.Model):
         return f"{self.full_name}: {self.day}"
 
 
-class ScheduleHistory(models.Model):
-    sync_at = models.DateTimeField()
-    schedule = models.ForeignKey(
-        "core.Schedule",
-        on_delete=models.CASCADE,
-        related_name="history",
-    )
-
-
 class ScheduleWhatsAppIntegration(models.Model):
     schedule = models.OneToOneField(
         "core.Schedule",
-        related_name="whatsapp",
+        related_name="whatsapp_integration",
         on_delete=models.CASCADE,
     )
     sent_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self) -> str:
+        return f"{self.id} - [schedule: {self.schedule.id}]: {self.sent_at.strftime("%Y-%m-%d %H:%M:%S")}"
 
 class ScheduleCalendarIntegration(models.Model):
-    schedule = models.OneToOneField(
+    schedule = models.ForeignKey(
         "core.Schedule",
-        related_name="calendar",
+        related_name="calendar_integration",
         on_delete=models.CASCADE,
     )
     sync_at = models.DateTimeField(auto_now_add=True)
@@ -76,6 +69,9 @@ class ScheduleCalendarIntegration(models.Model):
         "Calendar Event Data",
         default=dict,
     )
+
+    def __str__(self) -> str:
+        return f"{self.id} - [schedule: {self.schedule.id}]: {self.sync_at.strftime("%Y-%m-%d %H:%M:%S")}"
 
 
 class SharedCalendar(models.Model):
