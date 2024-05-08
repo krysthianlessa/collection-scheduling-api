@@ -1,7 +1,9 @@
 from time import sleep
+from datetime import datetime
 import requests
 from requests.exceptions import ConnectionError
 from decouple import config
+from soonerdb import SoonerDB
 
 WAIT_TIME = 60
 BACKEND_URL = config("BACKEND_URL", "http://web:8000/")
@@ -11,6 +13,8 @@ BACKEND_API_KEY = config("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGP
 
 
 class WhatsAppIntegration:
+    labzap_headers = {"Content-Type": "application/json"}
+
     def get_schedules(self):
         headers = {
             "Authorization": f"Api-Key {BACKEND_API_KEY}"
@@ -29,7 +33,7 @@ class WhatsAppIntegration:
         return []
 
     def send_to_whatsapp(self, message):
-        headers = {"Content-Type": "application/json"}
+        
         payload = {
             "chatId": f"{RECIPIENT_PHONE_NUMBER}@c.us",
             "text": message,
@@ -38,7 +42,7 @@ class WhatsAppIntegration:
         response = requests.post(
             f"{LAB_ZAP_URL}api/sendText",
             json=payload,
-            headers=headers,
+            headers=self.labzap_headers,
         )
         print("send_to_whatsapp:", response)
         return response.status_code == 200
@@ -54,25 +58,52 @@ class WhatsAppIntegration:
         )
         print("update_schedule:", response)
 
+    def is_session_active(self):
+        response = requests.get(
+            f"{LAB_ZAP_URL}api/sessions/",
+            headers=self.labzap_headers,
+        )
+        print("Is session active:", response, ",", response.content)
+        return (response.status_code == 200 and len(response.json()) > 0 and response.json()[0]["status"] != "WORKING")
+
+    def start_session(self):
+        response = requests.post(
+            f"{LAB_ZAP_URL}api/sessions/start",
+            json={"name": "default"},
+            headers=self.labzap_headers,
+        )
+        print("start Session:", response)
+
+def nightly():
+    now = datetime.now()
+    # período noturno entre 22 e 6 da manhã
+    return now.hour <= 6 or now.hour >= 22
 
 def main():
+    local_db = SoonerDB("./db")
     wpp = WhatsAppIntegration()
+    # logged = db.get(today, None)
+    # db.set(today, "LOG_TODAY")
+
     while True:
         sleep(WAIT_TIME)
+
+        if nightly():
+            continue
+
+        if not wpp.is_session_active():
+            wpp.start_session()
+            sleep(10)
 
         for schedule in wpp.get_schedules():
             try:
                 # E se o primeiro der OK e o segundo falhar? Vou persistir localmente tbm.
-                # Antes de enviar para o WHatsapp, verificar no endpoint "api/sessions/default" se a sessão
-                # está ativa
                 if wpp.send_to_whatsapp(schedule["whatsapp_message"]):
                     wpp.update_schedule(schedule["id"])
 
                 sleep(0.3)
             except ConnectionError as connection_error:
                 print("Connection Error:", connection_error)
-        break
-
 
 if __name__ == '__main__':
     try:

@@ -3,3 +3,4 @@
 .DB/
 *.pyc
 staticfiles/
+scripts/db/
