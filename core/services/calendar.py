@@ -1,15 +1,35 @@
+import base64
+import os
+from pathlib import Path
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from core.models import Schedule, ScheduleCalendarIntegration
+from django.conf import settings
 
 
 class CalendarService():
 
+    @staticmethod
+    def _get_json_path():
+        path = Path(settings.BASE_DIR, "service_account_key.json")
+
+        if os.path.isfile(path):
+            return path
+
+        service_account_key_b64 = settings.SERVICE_ACCOUNT_KEY
+        service_account_key = base64.b64decode(service_account_key_b64.encode("utf-8"))
+        service_account_key_utf8 = service_account_key.decode("utf-8")
+        service_account_key_normalized = service_account_key_utf8
+
+        with open(path, "w") as file:
+            file.write(service_account_key_normalized)
+
+        return path
+
     @classmethod
     def create_api_service(cls):
-        service_account_file = "service_account_key.json"
         credentials = service_account.Credentials.from_service_account_file(
-            service_account_file,
+            cls._get_json_path(),
             scopes=['https://www.googleapis.com/auth/calendar']
         )
         return build('calendar', 'v3', credentials=credentials)
