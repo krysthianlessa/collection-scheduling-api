@@ -7,7 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from core.models import Schedule
 from core.serializers import ScheduleSerializer, MeSerializer
 from rest_framework_api_key.permissions import HasAPIKey
-from rest_framework_jwt.permissions import IsSuperUser
+from rest_framework.permissions import IsAuthenticated
 
 
 class ScheduleViewSet(ModelViewSet):
@@ -15,7 +15,7 @@ class ScheduleViewSet(ModelViewSet):
     serializer_class = ScheduleSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["has_sync"]
-    permission_classes = [HasAPIKey | IsSuperUser]
+    permission_classes = [HasAPIKey | IsAuthenticated]
 
     @action(detail=False, methods=["post"], url_path="(?P<schedule_id>\\d+)/whatsapp")
     def whatsapp_synced(self, request, schedule_id, *args, **kwargs):
