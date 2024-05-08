@@ -40,7 +40,7 @@ class CalendarService():
         if schedule.calendar_event_id is None:
             event_data = service_event.insert(**params).execute()
         else:
-            event_data = service_event.update(**params, event_id=schedule.calendar_event_id).execute()
+            event_data = service_event.update(**params, eventId=schedule.calendar_event_id).execute()
 
         ScheduleCalendarIntegration.objects.create(
             schedule=schedule,
