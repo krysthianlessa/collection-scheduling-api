@@ -80,6 +80,7 @@ def nightly():
     return now.hour <= 6 or now.hour >= 22
 
 def main():
+    print("Polling started at", datetime.now())
     local_db = SoonerDB("./db")
     wpp = WhatsAppIntegration()
     # logged = db.get(today, None)
