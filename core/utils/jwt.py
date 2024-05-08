@@ -9,7 +9,7 @@ def jwt_create_response_payload(token: str, user: User = None, request=None, iss
     }
 
     if shared_calendar is not None:
-        data["sector"] = shared_calendar.sector,
-        data["neighborhood"] = shared_calendar.neighborhood,
+        data["sector"] = shared_calendar.sector
+        data["neighborhood"] = shared_calendar.neighborhood
 
     return data
