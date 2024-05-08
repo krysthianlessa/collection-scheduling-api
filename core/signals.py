@@ -1,7 +1,7 @@
 import multiprocessing
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from core.models import Schedule, SharedCalendar, ScheduleWhatsAppIntegration, ScheduleCalendarIntegration
+from core.models import Schedule, SharedCalendar
 from core.services import CalendarService
 
 
