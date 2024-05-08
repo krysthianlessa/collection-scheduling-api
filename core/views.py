@@ -2,9 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from core.models import Schedule
-from core.serializers import ScheduleSerializer
+from core.serializers import ScheduleSerializer, MeSerializer
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework_jwt.permissions import IsSuperUser
 
@@ -21,3 +22,10 @@ class ScheduleViewSet(ModelViewSet):
         Schedule.objects.filter(id=schedule_id).update(has_sync=True)
 
         return Response(status=status.HTTP_200_OK)
+
+class MeView(APIView):
+    serializer_class = MeSerializer
+
+    def get(self, request, *args, **kwargs):
+        serializer = MeSerializer(request.user)
+        return Response(serializer.data)
