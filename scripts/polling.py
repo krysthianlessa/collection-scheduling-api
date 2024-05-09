@@ -1,4 +1,5 @@
 from time import sleep
+from random import uniform
 from datetime import datetime
 import requests
 from requests.exceptions import ConnectionError
@@ -39,13 +40,15 @@ class WhatsAppIntegration:
             "text": message,
             "session": "default"
         }
+
+        print("payload:", payload)
         response = requests.post(
             f"{LAB_ZAP_URL}api/sendText",
             json=payload,
             headers=self.labzap_headers,
         )
-        print("send_to_whatsapp:", response)
-        return response.status_code == 200
+        print("send_to_whatsapp:", response, response.content)
+        return response.status_code == 201
 
     def update_schedule(self, schedule_id):
         headers = {
@@ -64,7 +67,7 @@ class WhatsAppIntegration:
             headers=self.labzap_headers,
         )
         print("Is session active:", response, ",", response.content)
-        return (response.status_code == 200 and len(response.json()) > 0 and response.json()[0]["status"] != "WORKING")
+        return (response.status_code == 200 and len(response.json()) > 0 and response.json()[0]["status"] == "WORKING")
 
     def start_session(self):
         response = requests.post(
@@ -79,6 +82,11 @@ def nightly():
     # período noturno entre 22 e 6 da manhã
     return now.hour <= 6 or now.hour >= 22
 
+def little_wait(start = 0):
+    """Sleep one moment"""
+    value = start + uniform(0.2, 0.6)
+    sleep(value)
+
 def main():
     print("Polling started at", datetime.now())
     local_db = SoonerDB("./db")
@@ -87,22 +95,24 @@ def main():
     # db.set(today, "LOG_TODAY")
 
     while True:
-        sleep(WAIT_TIME)
+        little_wait(WAIT_TIME)
 
         if nightly():
             continue
 
         if not wpp.is_session_active():
+            little_wait()
             wpp.start_session()
-            sleep(10)
+            little_wait(10)
 
+        little_wait()
         for schedule in wpp.get_schedules():
             try:
-                # E se o primeiro der OK e o segundo falhar? Vou persistir localmente tbm.
+                # TODO: E se o primeiro der OK e o segundo falhar? Vou persistir localmente tbm.
                 if wpp.send_to_whatsapp(schedule["whatsapp_message"]):
                     wpp.update_schedule(schedule["id"])
 
-                sleep(0.3)
+                little_wait()
             except ConnectionError as connection_error:
                 print("Connection Error:", connection_error)
 
