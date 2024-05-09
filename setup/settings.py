@@ -115,6 +115,39 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "timestamp": {
+            "format": "[{asctime} {levelname}][Line {lineno}] {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "INFO",  # Or 'INFO' or 'ERROR' depending on your preference
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": Path(
+                BASE_DIR,
+                "logs",
+                "django.log",
+            ),
+            "formatter": "timestamp",
+            "maxBytes": 1024 * 1024 * 30,
+            "backupCount": 10,
+        },
+    },
+    "loggers": {
+        "default": {
+            "handlers": ["file"],
+            "level": "INFO",  # Or 'INFO' or 'ERROR' depending on your preference
+            "propagate": True,
+        },
+    },
+}
+
+
 # Rest Framework
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
