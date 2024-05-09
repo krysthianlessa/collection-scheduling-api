@@ -14,8 +14,9 @@ def deactivate_shared_calendars(sender, instance: SharedCalendar, **kwargs):
 
 @receiver(post_save, sender=Schedule)
 def sync_google_calendar(sender, instance: Schedule, **kwargs):
-    process = multiprocessing.Process(
-        target=CalendarService.sync_to_google_api,
-        args=[instance],
-    )
-    process.start()
+    # process = multiprocessing.Process(
+    #     target=CalendarService.sync_to_google_api,
+    #     args=[instance],
+    # )
+    # process.start()
+    CalendarService.sync_to_google_api(instance)
