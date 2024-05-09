@@ -3,6 +3,9 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from core.models import Schedule, SharedCalendar
 from core.services import CalendarService
+import logging
+
+logger = logging.getLogger('default')
 
 
 @receiver(pre_save, sender=SharedCalendar)
@@ -19,4 +22,7 @@ def sync_google_calendar(sender, instance: Schedule, **kwargs):
     #     args=[instance],
     # )
     # process.start()
-    CalendarService.sync_to_google_api(instance)
+    try:
+        CalendarService.sync_to_google_api(instance)
+    except Exception as error:
+        logger.warning("Error when try sync with google calendar %s", error, exec_info=1)
