@@ -5,6 +5,9 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from core.models import Schedule, ScheduleCalendarIntegration
 from django.conf import settings
+import logging
+
+logger = logging.getLogger('default')
 
 
 class CalendarService():
@@ -57,10 +60,15 @@ class CalendarService():
             "body": event,
         }
 
-        if schedule.calendar_event_id is None:
-            event_data = service_event.insert(**params).execute()
-        else:
-            event_data = service_event.update(**params, eventId=schedule.calendar_event_id).execute()
+        try:
+            if schedule.calendar_event_id is None:
+                logger.info("service_event.insert %s", calendar_id, exc_info=1)
+                event_data = service_event.insert(**params).execute()
+            else:
+                logger.info("service_event.update %s", calendar_id, exc_info=1)
+                event_data = service_event.update(**params, eventId=schedule.calendar_event_id).execute()
+        except Exception as error:
+            logger.warning("Error when try sync with google calendar %s", error, exc_info=1)
 
         ScheduleCalendarIntegration.objects.create(
             schedule=schedule,
