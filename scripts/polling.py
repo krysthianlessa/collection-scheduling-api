@@ -41,7 +41,6 @@ class WhatsAppIntegration:
             "session": "default"
         }
 
-        print("payload:", payload)
         response = requests.post(
             f"{LAB_ZAP_URL}api/sendText",
             json=payload,
@@ -66,7 +65,7 @@ class WhatsAppIntegration:
             f"{LAB_ZAP_URL}api/sessions/",
             headers=self.labzap_headers,
         )
-        print("Is session active:", response, ",", response.content)
+        print("Is session active:", response)
         return (response.status_code == 200 and len(response.json()) > 0 and response.json()[0]["status"] == "WORKING")
 
     def start_session(self):
@@ -85,6 +84,7 @@ def nightly():
 def little_wait(start = 0):
     """Sleep one moment"""
     value = start + uniform(0.2, 0.6)
+    print("Waiting...", value)
     sleep(value)
 
 def main():
