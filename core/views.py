@@ -4,14 +4,14 @@ from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
-from core.models import Schedule
+from core.models import Schedule, ScheduleWhatsAppIntegration
 from core.serializers import ScheduleSerializer, MeSerializer
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework.permissions import IsAuthenticated
 
 
 class ScheduleViewSet(ModelViewSet):
-    queryset = Schedule.objects.all()
+    queryset = Schedule.objects.order_by("id")
     serializer_class = ScheduleSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["has_sync"]
@@ -20,6 +20,7 @@ class ScheduleViewSet(ModelViewSet):
     @action(detail=False, methods=["post"], url_path="(?P<schedule_id>\\d+)/whatsapp")
     def whatsapp_synced(self, request, schedule_id, *args, **kwargs):
         Schedule.objects.filter(id=schedule_id).update(has_sync=True)
+        ScheduleWhatsAppIntegration.objects.create(schedule_id=schedule_id)
 
         return Response(status=status.HTTP_200_OK)
 
