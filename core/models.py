@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Schedule(models.Model):
-    has_sync = models.BooleanField(default=False)
+    has_sync = models.BooleanField("This info was synced with WhatsApp", default=False)
     day_of_birth = models.DateField(blank=True, null=True)
     calendar_event_id = models.CharField(max_length=64, null=True)
     day = models.DateField(blank=True, null=True)
