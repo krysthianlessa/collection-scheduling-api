@@ -69,9 +69,9 @@ class CalendarService():
                 event_data = service_event.update(**params, eventId=schedule.calendar_event_id).execute()
         except Exception as error:
             logger.warning("Error when try sync with google calendar %s", error, exc_info=1)
-
-        ScheduleCalendarIntegration.objects.create(
-            schedule=schedule,
-            data=event_data,
-        )
-        Schedule.objects.filter(id=schedule.id).update(calendar_event_id=event_data["id"])
+        else:
+            ScheduleCalendarIntegration.objects.create(
+                schedule=schedule,
+                data=event_data,
+            )
+            Schedule.objects.filter(id=schedule.id).update(calendar_event_id=event_data["id"])

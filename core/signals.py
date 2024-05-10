@@ -17,12 +17,14 @@ def deactivate_shared_calendars(sender, instance: SharedCalendar, **kwargs):
 
 @receiver(post_save, sender=Schedule)
 def sync_google_calendar(sender, instance: Schedule, **kwargs):
-    process = multiprocessing.Process(
-        target=CalendarService.sync_to_google_api,
-        args=[instance],
-    )
-    process.start()
-    # try:
-    #     CalendarService.sync_to_google_api(instance)
-    # except Exception as error:
-    #     logger.warning("Error when try sync with google calendar %s", error, exec_info=1)
+    # process = multiprocessing.Process(
+    #     target=CalendarService.sync_to_google_api,
+    #     args=[instance],
+    # )
+    # process.start()
+    logger.info("LOG: Signal sync_google_calendar")
+    print("print: Signal sync_google_calendar")
+    try:
+        CalendarService.sync_to_google_api(instance)
+    except Exception as error:
+        logger.warning("Error when try sync with google calendar %s", error, exc_info=1)
