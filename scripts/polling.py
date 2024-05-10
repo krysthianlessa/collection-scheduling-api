@@ -60,13 +60,16 @@ class WhatsAppIntegration:
         )
         print("update_schedule:", response)
 
-    def is_session_active(self):
+    def get_session_status(self):
         response = requests.get(
             f"{LAB_ZAP_URL}api/sessions/",
             headers=self.labzap_headers,
         )
-        print("Is session active:", response)
-        return (response.status_code == 200 and len(response.json()) > 0 and response.json()[0]["status"] == "WORKING")
+        print("Get session status:", response)
+        if response.status_code == 200 and len(response.json()) > 0:
+            return response.json()[0]["status"]
+
+        return "UNDEFINED"
 
     def start_session(self):
         response = requests.post(
@@ -78,8 +81,8 @@ class WhatsAppIntegration:
 
 def nightly():
     now = datetime.now()
-    # período noturno entre 22 e 6 da manhã
-    return now.hour <= 6 or now.hour >= 22
+    # período noturno entre 0 e 6 da manhã
+    return now.hour <= 6
 
 def little_wait(start = 0):
     """Sleep one moment"""
@@ -100,10 +103,18 @@ def main():
         if nightly():
             continue
 
-        if not wpp.is_session_active():
+        # Sessions: STARTING, WORKING, SCAN_QR_CODE, FAILED, UNDEFINED, STARTING
+        status = wpp.get_session_status()
+        if status in ["FAILED", "UNDEFINED"]:
             little_wait()
             wpp.start_session()
             little_wait(10)
+            status = wpp.get_session_status()
+            little_wait()
+
+        if status == "SCAN_QR_CODE" or status != "WORKING":
+            print(status)
+            continue
 
         little_wait()
         for schedule in wpp.get_schedules():

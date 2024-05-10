@@ -24,6 +24,7 @@ class ScheduleViewSet(ModelViewSet):
 
         return Response(status=status.HTTP_200_OK)
 
+
 class MeView(APIView):
     serializer_class = MeSerializer
 
