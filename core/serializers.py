@@ -69,4 +69,5 @@ class ScheduleSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         #Set has_sync false to resend message to whatsapp
         validated_data["has_sync"] = False
+        print(validated_data)
         return super().update(instance, validated_data)
