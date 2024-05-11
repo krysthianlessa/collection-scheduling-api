@@ -65,3 +65,7 @@ class ScheduleSerializer(ModelSerializer):
         # Create the Schedule instance
         schedule = Schedule.objects.create(**validated_data)
         return schedule
+    
+    def update(self, instance, validated_data):
+        validated_data["has_sync"] = False
+        return super().update(instance, validated_data)
