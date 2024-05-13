@@ -40,7 +40,7 @@ class ScheduleAdmin(admin.ModelAdmin):
         return calendar and calendar.sync_at is not None
 
     def whatsapp(self, obj) -> bool:
-        whatsapp = obj.whatsapp_integration.order_by("id").last()
+        whatsapp = obj.whatsapp_integration
         return whatsapp and whatsapp.sent_at is not None
 
     def has_add_permission(self, request, obj=None):
