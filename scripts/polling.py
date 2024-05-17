@@ -13,6 +13,17 @@ RECIPIENT_PHONE_NUMBER = config("RECIPIENT_PHONE_NUMBER", default="123")
 STAFFS_PHONE_NUMBER = config("STAFFS_PHONE_NUMBER", default="", cast=lambda v: [s.strip() for s in v.split(",")])
 BACKEND_API_KEY = config("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGPFjptO1nf2SA6ci")
 
+def nightly():
+    now = datetime.now()
+    # período noturno entre 0 e 6 da manhã
+    return now.hour <= 6
+
+def little_wait(start = 0):
+    """Sleep one moment"""
+    value = start + uniform(0.2, 0.6)
+    print("Waiting...", value)
+    sleep(value)
+
 
 class WhatsAppIntegration:
     labzap_headers = {"Content-Type": "application/json"}
@@ -38,6 +49,7 @@ class WhatsAppIntegration:
         if success := self._send_to_whatsapp(message, RECIPIENT_PHONE_NUMBER):
             for recipient_number in STAFFS_PHONE_NUMBER:
                 try:
+                    little_wait()
                     self._send_to_whatsapp(message, recipient_number)
                 except Exception as error:
                     print("Error when try send message copy to staffs:", error)
@@ -89,16 +101,6 @@ class WhatsAppIntegration:
         )
         print("start Session:", response)
 
-def nightly():
-    now = datetime.now()
-    # período noturno entre 0 e 6 da manhã
-    return now.hour <= 6
-
-def little_wait(start = 0):
-    """Sleep one moment"""
-    value = start + uniform(0.2, 0.6)
-    print("Waiting...", value)
-    sleep(value)
 
 def main():
     print("Polling started at", datetime.now())
