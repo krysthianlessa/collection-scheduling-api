@@ -10,7 +10,7 @@ WAIT_TIME = 60
 BACKEND_URL = config("BACKEND_URL", "http://web:8000/")
 LAB_ZAP_URL = config("LAB_ZAP_URL", default="http://labzap:3000/")
 RECIPIENT_PHONE_NUMBER = config("RECIPIENT_PHONE_NUMBER", default="123")
-STAFFS_PHONE_NUMBER = config("STAFFS_PHONE_NUMBER", default=[], cast=lambda v: [s.strip() for s in v.split(",")])
+STAFFS_PHONE_NUMBER = config("STAFFS_PHONE_NUMBER", default="", cast=lambda v: [s.strip() for s in v.split(",")])
 BACKEND_API_KEY = config("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGPFjptO1nf2SA6ci")
 
 
