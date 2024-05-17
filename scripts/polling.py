@@ -10,6 +10,7 @@ WAIT_TIME = 60
 BACKEND_URL = config("BACKEND_URL", "http://web:8000/")
 LAB_ZAP_URL = config("LAB_ZAP_URL", default="http://labzap:3000/")
 RECIPIENT_PHONE_NUMBER = config("RECIPIENT_PHONE_NUMBER", default="123")
+STAFFS_PHONE_NUMBER = config("STAFFS_PHONE_NUMBER", default=[], cast=lambda v: [s.strip() for s in v.split(",")])
 BACKEND_API_KEY = config("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGPFjptO1nf2SA6ci")
 
 
@@ -34,9 +35,18 @@ class WhatsAppIntegration:
         return []
 
     def send_to_whatsapp(self, message):
-        
+        if success := self._send_to_whatsapp(message, RECIPIENT_PHONE_NUMBER):
+            for recipient_number in STAFFS_PHONE_NUMBER:
+                try:
+                    self._send_to_whatsapp(message, recipient_number)
+                except Exception as error:
+                    print("Error when try send message copy to staffs:", error)
+
+        return success
+
+    def _send_to_whatsapp(self, message, recipient_number):
         payload = {
-            "chatId": f"{RECIPIENT_PHONE_NUMBER}@c.us",
+            "chatId": f"{recipient_number}@c.us",
             "text": message,
             "session": "default"
         }
@@ -46,7 +56,7 @@ class WhatsAppIntegration:
             json=payload,
             headers=self.labzap_headers,
         )
-        print("send_to_whatsapp:", response, response.content)
+        print("Sending to", recipient_number, "|", response, response.content)
         return response.status_code == 201
 
     def update_schedule(self, schedule_id):
