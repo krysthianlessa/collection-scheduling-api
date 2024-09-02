@@ -16,7 +16,7 @@ BACKEND_API_KEY = config("BACKEND_API_KEY", default="XIYsieyz.pyysqzZIRn6GNjCxGP
 def nightly():
     now = datetime.now()
     # período noturno entre 0 e 6 da manhã
-    return now.hour <= 6
+    return now.hour >= 18 and now.hour <= 6
 
 def little_wait(start = 0):
     """Sleep one moment"""
@@ -45,8 +45,8 @@ class WhatsAppIntegration:
         # TODO: Add logs to catch when status code is not 200 OK
         return []
 
-    def send_to_whatsapp(self, message):
-        if success := self._send_to_whatsapp(message, RECIPIENT_PHONE_NUMBER):
+    def send_to_whatsapp(self, message, recipient_phone_number):
+        if success := self._send_to_whatsapp(message, recipient_phone_number):
             for recipient_number in STAFFS_PHONE_NUMBER:
                 try:
                     little_wait()
@@ -132,7 +132,7 @@ def main():
         for schedule in wpp.get_schedules():
             try:
                 # TODO: E se o primeiro der OK e o segundo falhar? Vou persistir localmente tbm.
-                if wpp.send_to_whatsapp(schedule["whatsapp_message"]):
+                if wpp.send_to_whatsapp(schedule["whatsapp_message"], schedule["laboratory_phone_number"]):
                     wpp.update_schedule(schedule["id"])
 
                 little_wait()
