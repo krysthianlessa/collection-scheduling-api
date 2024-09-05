@@ -81,6 +81,7 @@ class SharedCalendar(models.Model):
     is_active = models.BooleanField(default=True)
     sector = models.CharField(max_length=128)
     neighborhood = models.CharField(max_length=128)
+    laboratory_phone_number = models.CharField(max_length=128)
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

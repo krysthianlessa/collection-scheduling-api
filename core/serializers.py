@@ -34,6 +34,7 @@ class MeSerializer(ModelSerializer):
 
 class ScheduleSerializer(ModelSerializer):
     whatsapp_message = SerializerMethodField(read_only=True)
+    laboratory_phone_number = SerializerMethodField(read_only=True)
 
     class Meta:
         model = Schedule
@@ -43,10 +44,13 @@ class ScheduleSerializer(ModelSerializer):
             'calendar_event_id',
             'has_sync'
         ]
-        read_only_fields = ["whatsapp_message"]
+        read_only_fields = ["whatsapp_message", "laboratory_phone_number"]
 
     def get_whatsapp_message(self, schedule: Schedule):
         return schedule.whatsapp_message
+    
+    def get_laboratory_phone_number(self, schedule: Schedule):
+        return schedule.shared_calendar.laboratory_phone_number
 
     def create(self, validated_data):
         # Get the user making the request
